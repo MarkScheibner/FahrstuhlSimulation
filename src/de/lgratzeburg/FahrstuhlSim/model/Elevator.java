@@ -1,6 +1,6 @@
 package de.lgratzeburg.FahrstuhlSim.model;
 
-public class Fahrstuhl {
+public class Elevator {
 //	nötige Werte
 //	vertPos
 //	movementState
@@ -9,8 +9,8 @@ public class Fahrstuhl {
 //	doorRuntime
 	
 
-	// TODO ID-Werte durch Enum-Werte ersetzen
-	//change!
+
+
 	// Werte für Position des Fahrstuhls
 	private double verticalPos=0;
 
@@ -29,7 +29,7 @@ public class Fahrstuhl {
 	// Noch nicht ganz genau beschriebene Eigenschaft, welche vllt unn�tig ist
 	private float doorRuntime=0;
 	
-	public Fahrstuhl(int verticalPos, int schachtID){
+	public Elevator(int verticalPos, int schachtID){
 		this.verticalPos=verticalPos;
 		this.schachtID=schachtID;
 	}
