@@ -1,15 +1,6 @@
 package de.lgratzeburg.FahrstuhlSim.model;
 
 public class Elevator {
-//	nötige Werte
-//	vertPos
-//	movementState
-//	schachtID
-//	doorState
-//	doorRuntime
-	
-
-
 
 	// Werte für Position des Fahrstuhls
 	private double verticalPos=0;
@@ -26,10 +17,10 @@ public class Elevator {
 	//Momentaner Zustand der Tür
 	private DoorState doorState= DoorState.CLOSED;
 
-	/** Noch nicht ganz genau beschriebene Eigenschaft, welche vllt unn�tig ist
+	/** Noch nicht ganz genau beschriebene Eigenschaft, welche vllt unnötig ist
 	 * (Wert lässt sich möglicherweise in einer setDoorSpeed Methode verändern)
 	 */
-	private float doorRuntime=0;
+	private int doorRuntime=0;
 
 	/**Noch nicht ganz genau bestimmter Wert, um die Tür kurzzeitg in einer halboffenen/geschlossenen Phase zu lassen
 	 * (Wert lässt sich möglicherweise in einer setDoorSpeed Methode verändern)
@@ -113,7 +104,36 @@ public class Elevator {
 		return this.schachtID;
 	}
 
+	/**
+	 * Legt eines Ganzzahligen Wert für die Mindestöffnungsdauer der Tür in ms fest
+	 * @param doorRuntime -Mindestdauer für die Tür den Zustand OPENED behalten zu müssen
+	 */
+	public void setDoorRuntime(int doorRuntime) {this.doorRuntime = doorRuntime;}
 
+	/**
+	 * Legt die Dauer für eine Änderung von einem Vorgang der Öffnung und Schließung in ms fest
+	 * @param doorMoveSpeed - Dauer der Öffnung, Schließung einer Tür in ms
+	 */
+	public void setDoorMoveSpeed(int doorMoveSpeed) {this.doorMoveSpeed = doorMoveSpeed;}
+
+	/**
+	 *  Ändert den Zustand der Fahrstuhltür
+	 * @param doorState -Zustand der Tür
+	 */
+	public void setDoorState(DoorState doorState) {this.doorState = doorState;}
+
+	/**
+	 * Legt einen neuen Wert der vertikalen Position fest, welcher auf eine Nachkommastelle gerundet wird
+	 * @param verticalPos - Wert für momentane vertikale Position des Fahrstuhls, in Relation zu den Stockwerken
+	 */
+	public void setNewVertPosition (double verticalPos) {this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d; }
+
+
+	/**
+	 * Ändert den Bewegungszustand des Fahrstuhls
+	 * @param movementState - Zustand der Bewegung RESTING, UP, DOWN
+	 */
+	public void setMovementState(MovementState movementState) {this.movementState = movementState;}
 
 	/**
 	 * Methode um die Tür zu öffnen und zu schließen, indem man einen bool Wert für Tür eingibt
