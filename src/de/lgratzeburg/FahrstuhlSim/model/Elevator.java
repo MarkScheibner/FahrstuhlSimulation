@@ -28,6 +28,12 @@ public class Elevator {
 	 */
 	private int doorMoveSpeed = 1000;
 
+	/**
+	 * Wert für die Control unit, sollte sie die Geschwindigkeit des Fahrstuhls verändern wollen
+	 * (Standartwert muss noch festgelegt werden)
+	 */
+	private double elevatorSpeed = 1;
+
 	// Gwünschter Zustand der Tür
 	boolean open = false;
 
@@ -39,52 +45,6 @@ public class Elevator {
 	public Elevator(int verticalPos, int schachtID){
 		this.verticalPos=verticalPos;
 		this.schachtID=schachtID;
-	}
-
-	/**
-	 *  Methode um die Position mithilfe eines ganzahligen Wertes des Zieles zu veraendern
-	 * @param targetLevel - gewünschter Endwert der vertikalen Fahrstuhlposition
-	 */
-	public void changeVertPos(int targetLevel){
-		this.targetLevel = targetLevel;
-		// Bestimmung der Fahrtrichtung
-		if (this.targetLevel - verticalPos<0){
-			this.movementState = MovementState.DOWN;
-		} if (this.targetLevel - verticalPos>0){
-			this.movementState = MovementState.UP;
-		} if (this.targetLevel - verticalPos == 0){
-			this.movementState = MovementState.RESTING;
-			// sollte das zahl = mit der Pos sein, führt er nichts aus
-			return;
-		}
-
-
-		if (this.movementState != MovementState.RESTING){
-			// dauerhaftes erhöhen der Pos, bis Ziel erreicht
-			while(verticalPos != targetLevel && movementState == MovementState.UP){
-				// rundet die Kommazahl
-				this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d;
-				System.out.println("Elevator level: "+ this.verticalPos);
-
-
-				// Debugg um die Pos zu sehen
-				System.out.println("Elevator level: "+ this.verticalPos);
-			}
-			// see above
-			while(verticalPos != targetLevel && movementState == MovementState.DOWN){
-				// rundet die Kommazahl
-				this.verticalPos =Math.round(( verticalPos - 0.1)*10d)/10d;
-
-				//Debugg, um die Pos zu sehen
-				System.out.println("Elevator level: "+ this.verticalPos);
-
-			}
-
-			//Lässt den Fahrstuhl wieder still stehen
-			this.movementState = MovementState.RESTING;
-
-		}
-
 	}
 
 
@@ -121,7 +81,22 @@ public class Elevator {
 		return this.doorState;
 	}
 
+	/**
+	 * Legt die Geschwindigkeit des Fahrstuhls fest
+	 * @param elevatorSpeed - Wert, welcher die Geschwindigkeit des Fahrstuhls angibt (Absprache nötig)
+	 */
+	public void setElevatorSpeed(double elevatorSpeed) {
+		this.elevatorSpeed = elevatorSpeed;
+	}
 
+
+	/**
+	 * Gibt die Maximalgeschwindigkeit des Fahrstzuhls zur&uuml;ck
+	 * @return - Wert, welcher die Geschwindigkeit des Fahrstuhls angibt (Absprache n&ouml;tig)
+	 */
+	public double getElevatorSpeed() {
+		return elevatorSpeed;
+	}
 
 
 	/**
@@ -153,7 +128,7 @@ public class Elevator {
 	 * @param verticalPos - Wert für momentane vertikale Position des Fahrstuhls, in Relation zu den Stockwerken
 	 */
 	public void setNewVertPosition (double verticalPos) {
-		this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d;
+		this.verticalPos = verticalPos + 0.1;
 	}
 
 
@@ -167,47 +142,101 @@ public class Elevator {
 
 
 
-	/**
-	 * Methode um die Tür zu öffnen und zu schließen, indem man einen bool Wert für Tür eingibt
-	 * (Wird wahrscheinlich auf die Control übertragen)
-	 * @param open - Wenn true dann soll die Tür sich öffnen
-	 */
-	public void changeDoorStatus(boolean open){
-		this.open = open;
-		if  (this.open && doorState != DoorState.OPENED){
+/**
+ * changeVertPos Funktion wurde rausgenommen und an die Control übergeben
+ * (Ich hab hier zum Abschreiben die Funktion noch da gelassen)
+ *
 
-			/**
-			 * Debugg Code
-			 */
-			System.out.println("Tür wird geöffnet, bitte haben Sie Geduld");
+ /**
+ *  Methode um die Position mithilfe eines ganzahligen Wertes des Zieles zu veraendern
+ * @param targetLevel - gewünschter Endwert der vertikalen Fahrstuhlposition
 
-			this.doorState = DoorState.OPENED;
-
-			/**
-			 * Debugg Code
-			 */
-			System.out.println("Tür ist jetzt offen");
-			return;
-		}
-		/**
-		 * Selbes Szenario, bloß mit der Angabe die Tür zu öffnen
-		 */
-		if (!this.open && doorState != DoorState.CLOSED){
-
-			/**
-			 * Debugg Code
-			 */
-			System.out.println("Tür wird geschlossen, bitte haben Sie Geduld");
+public void changeVertPos(int targetLevel){
+this.targetLevel = targetLevel;
+// Bestimmung der Fahrtrichtung
+if (this.targetLevel - verticalPos<0){
+this.movementState = MovementState.DOWN;
+} if (this.targetLevel - verticalPos>0){
+this.movementState = MovementState.UP;
+} if (this.targetLevel - verticalPos == 0){
+this.movementState = MovementState.RESTING;
+// sollte das zahl = mit der Pos sein, führt er nichts aus
+return;
+}
 
 
-			/**
-			 * Debugg Code
-			 */
-			System.out.println("Tür ist jetzt geschlossen");
-			return;
-		}
+if (this.movementState != MovementState.RESTING){
+// dauerhaftes erhöhen der Pos, bis Ziel erreicht
+while(verticalPos != targetLevel && movementState == MovementState.UP){
+// rundet die Kommazahl
+this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d;
+System.out.println("Elevator level: "+ this.verticalPos);
 
-		System.out.println("Die Tür ist bereits in diesem Zustand ( "+this.doorState +" ), es wurden keine Veränderungen vorgenommen");
-	}
 
+// Debugg um die Pos zu sehen
+System.out.println("Elevator level: "+ this.verticalPos);
+}
+// see above
+while(verticalPos != targetLevel && movementState == MovementState.DOWN){
+// rundet die Kommazahl
+this.verticalPos =Math.round(( verticalPos - 0.1)*10d)/10d;
+
+//Debugg, um die Pos zu sehen
+System.out.println("Elevator level: "+ this.verticalPos);
+
+}
+
+//Lässt den Fahrstuhl wieder still stehen
+this.movementState = MovementState.RESTING;
+
+}
+ */
+
+/**
+ * changeDoorStatus Funktion wurde rausgenommen und an die Control übergeben
+ * (Ich hab hier zum Abschreiben die Funktion noch da gelassen)
+ *
+*
+*	 * Methode um die Tür zu öffnen und zu schließen, indem man einen bool Wert für Tür eingibt
+*	 * (Wird wahrscheinlich auf die Control übertragen)
+*	 * @param open - Wenn true dann soll die Tür sich öffnen
+*
+*	public void changeDoorStatus(boolean open){
+*		this.open = open;
+*		if  (this.open && doorState != DoorState.OPENED){
+*
+*
+*			 * Debugg Code
+*
+*			System.out.println("Tür wird geöffnet, bitte haben Sie Geduld");
+*
+*			this.doorState = DoorState.OPENED;
+*
+*
+*			 * Debugg Code
+*
+*			System.out.println("Tür ist jetzt offen");
+*			return;
+*		}
+*
+*		 * Selbes Szenario, bloß mit der Angabe die Tür zu öffnen
+*
+*		if (!this.open && doorState != DoorState.CLOSED){
+*
+*
+*			 * Debugg Code
+*
+*			System.out.println("Tür wird geschlossen, bitte haben Sie Geduld");
+*
+*
+*
+*			 * Debugg Code
+*
+*			System.out.println("Tür ist jetzt geschlossen");
+*			return;
+*		}
+*
+*		System.out.println("Die Tür ist bereits in diesem Zustand ( "+this.doorState +" ), es wurden keine Veränderungen vorgenommen");
+*	}
+*/
 }
