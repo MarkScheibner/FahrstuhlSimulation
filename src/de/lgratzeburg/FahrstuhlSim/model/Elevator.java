@@ -30,7 +30,12 @@ public class Elevator {
 
 	// Gwünschter Zustand der Tür
 	boolean open = false;
-	
+
+	/**
+	 * Konstruktor eines Objektes der Klasse Elevator
+	 * @param verticalPos -Starpostion des Fahrstuhls, als einen ganzzahligen Wert
+	 * @param schachtID -Zuweisung eines Fahrstuhls zu einem Schacht
+	 */
 	public Elevator(int verticalPos, int schachtID){
 		this.verticalPos=verticalPos;
 		this.schachtID=schachtID;
@@ -42,18 +47,18 @@ public class Elevator {
 	 */
 	public void changeVertPos(int targetLevel){
 		this.targetLevel = targetLevel;
-		// bestimmung der Fahrtrichtung
+		// Bestimmung der Fahrtrichtung
 		if (this.targetLevel - verticalPos<0){
 			this.movementState = MovementState.DOWN;
 		} if (this.targetLevel - verticalPos>0){
 			this.movementState = MovementState.UP;
 		} if (this.targetLevel - verticalPos == 0){
 			this.movementState = MovementState.RESTING;
-			// sollte das zahl = mit der Pos sein, führt er nicht
+			// sollte das zahl = mit der Pos sein, führt er nichts aus
 			return;
 		}
-		
-		
+
+
 		if (this.movementState != MovementState.RESTING){
 			// dauerhaftes erhöhen der Pos, bis Ziel erreicht
 			while(verticalPos != targetLevel && movementState == MovementState.UP){
@@ -69,67 +74,102 @@ public class Elevator {
 			while(verticalPos != targetLevel && movementState == MovementState.DOWN){
 				// rundet die Kommazahl
 				this.verticalPos =Math.round(( verticalPos - 0.1)*10d)/10d;
-				System.out.println("Elevator level: "+ this.verticalPos);
 
-				/**
-				 * Simuliert eine "Bewegung" des Fahrstuhls
-				 */
-				try {
-					Thread.sleep(300);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				//Debugg, um die Pos zu sehen
+				System.out.println("Elevator level: "+ this.verticalPos);
 
 			}
 
+			//Lässt den Fahrstuhl wieder still stehen
 			this.movementState = MovementState.RESTING;
 
 		}
 
 	}
-	
-	
+
+
+
+	/**
+	 * Gibt die aktuelle Position des Fahrstuhls in Relation zu den Stockwerken zurück
+	 * @return - Aktuelle Position des Fahrstuhls in Relation zu den Stockwerken
+	 */
 	public double getVertPos(){
 		return this.verticalPos;
 	}
-	
+
+	/**
+	 * Gibt die Schachtzugehörigkeit zurück
+	 * @return - SchachtID stimmt mit der ID des besetzten Schachtes überein
+	 */
 	public int getSchachtID(){
 		return this.schachtID;
 	}
 
 	/**
+	 * Gibt die momentane Bewegungsart zurück
+	 * @return - Enum Wert, ob der Fahrstuhl still steht, sich nach oben, oder nach unten bewegt
+	 */
+	public MovementState getMovementState(){
+		return this.movementState;
+	}
+
+	/**
+	 * Gibt den Öffnungszustand der Fahrstuhltür zurück
+	 * @return - Enum Wert, ob die Tür offen, oder geschlossen ist
+	 */
+	public DoorState getDoorState(){
+		return this.doorState;
+	}
+
+
+
+
+	/**
 	 * Legt eines Ganzzahligen Wert für die Mindestöffnungsdauer der Tür in ms fest
 	 * @param doorRuntime -Mindestdauer für die Tür den Zustand OPENED behalten zu müssen
 	 */
-	public void setDoorRuntime(int doorRuntime) {this.doorRuntime = doorRuntime;}
+	public void setDoorRuntime(int doorRuntime) {
+		this.doorRuntime = doorRuntime;
+	}
 
 	/**
 	 * Legt die Dauer für eine Änderung von einem Vorgang der Öffnung und Schließung in ms fest
 	 * @param doorMoveSpeed - Dauer der Öffnung, Schließung einer Tür in ms
 	 */
-	public void setDoorMoveSpeed(int doorMoveSpeed) {this.doorMoveSpeed = doorMoveSpeed;}
+	public void setDoorMoveSpeed(int doorMoveSpeed) {
+		this.doorMoveSpeed = doorMoveSpeed;
+	}
 
 	/**
 	 *  Ändert den Zustand der Fahrstuhltür
 	 * @param doorState -Zustand der Tür
 	 */
-	public void setDoorState(DoorState doorState) {this.doorState = doorState;}
+	public void setDoorState(DoorState doorState) {
+		this.doorState = doorState;
+	}
 
 	/**
 	 * Legt einen neuen Wert der vertikalen Position fest, welcher auf eine Nachkommastelle gerundet wird
 	 * @param verticalPos - Wert für momentane vertikale Position des Fahrstuhls, in Relation zu den Stockwerken
 	 */
-	public void setNewVertPosition (double verticalPos) {this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d; }
+	public void setNewVertPosition (double verticalPos) {
+		this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d;
+	}
 
 
 	/**
 	 * Ändert den Bewegungszustand des Fahrstuhls
 	 * @param movementState - Zustand der Bewegung RESTING, UP, DOWN
 	 */
-	public void setMovementState(MovementState movementState) {this.movementState = movementState;}
+	public void setMovementState(MovementState movementState) {
+		this.movementState = movementState;
+	}
+
+
 
 	/**
 	 * Methode um die Tür zu öffnen und zu schließen, indem man einen bool Wert für Tür eingibt
+	 * (Wird wahrscheinlich auf die Control übertragen)
 	 * @param open - Wenn true dann soll die Tür sich öffnen
 	 */
 	public void changeDoorStatus(boolean open){
@@ -169,9 +209,5 @@ public class Elevator {
 
 		System.out.println("Die Tür ist bereits in diesem Zustand ( "+this.doorState +" ), es wurden keine Veränderungen vorgenommen");
 	}
-	
-	
-	
-	
 
 }
