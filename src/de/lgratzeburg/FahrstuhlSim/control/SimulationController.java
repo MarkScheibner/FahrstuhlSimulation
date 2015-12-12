@@ -63,7 +63,26 @@ public class SimulationController {
 	 * @param delta - vergangene Zeit zwischen diesem und der letzten Simulationsiteration
 	 */
 	public void updateSim(float delta) {
+		switch(elevator.getMovementState()) {
+			case RESTING: {
+				// TODO Tür öffnen bzw. schließen und in Richtung des nächsten Ziels bewegen
+				switch(elevator.getDoorState()) {
+					case CLOSED: {
 
+					}
+					case OPENED: {
+
+					}
+				}
+
+			}
+			case UP: {
+				// TODO Elevator nach oben bewegen (beschleunigen?)
+			}
+			case DOWN: {
+				// TODO Elevator nach unten bewegen (beschleunigen?)
+			}
+		}
 	}
 
 	/**
