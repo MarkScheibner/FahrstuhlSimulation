@@ -24,6 +24,7 @@ public class Elevator {
 
 	/**Noch nicht ganz genau bestimmter Wert, um die Tür kurzzeitg in einer halboffenen/geschlossenen Phase zu lassen
 	 * (Wert lässt sich möglicherweise in einer setDoorSpeed Methode verändern)
+	 * (Bis auf weiteres unnütz, da die Sleep "Blöcke" entfernt wurden)
 	 */
 	private int doorMoveSpeed = 1000;
 
@@ -60,14 +61,6 @@ public class Elevator {
 				this.verticalPos =Math.round(( verticalPos + 0.1)*10d)/10d;
 				System.out.println("Elevator level: "+ this.verticalPos);
 
-				/**
-				 * Simuliert eine "Bewegung" des Fahrstuhls
-				 */
-				try {
-					Thread.sleep(400);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 
 				// Debugg um die Pos zu sehen
 				System.out.println("Elevator level: "+ this.verticalPos);
@@ -142,23 +135,11 @@ public class Elevator {
 	public void changeDoorStatus(boolean open){
 		this.open = open;
 		if  (this.open && doorState != DoorState.OPENED){
-			this.doorState = DoorState.OPENING;
 
 			/**
 			 * Debugg Code
 			 */
 			System.out.println("Tür wird geöffnet, bitte haben Sie Geduld");
-
-
-			/**
-			 * Lässt die Tür kurzzeitig zwischen offen und geschlossen verweilen
-			 * (Nutzen muss noch diskutiert werden)
-			 */
-			try {
-				Thread.sleep(doorMoveSpeed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 
 			this.doorState = DoorState.OPENED;
 
@@ -172,25 +153,12 @@ public class Elevator {
 		 * Selbes Szenario, bloß mit der Angabe die Tür zu öffnen
 		 */
 		if (!this.open && doorState != DoorState.CLOSED){
-			this.doorState = DoorState.CLOSING;
 
 			/**
 			 * Debugg Code
 			 */
 			System.out.println("Tür wird geschlossen, bitte haben Sie Geduld");
 
-
-			/**
-			 * Lässt die Tür kurzzeitig zwischen offen und geschlossen verweilen
-			 * (Nutzen muss noch diskutiert werden)
-			 */
-			try {
-				Thread.sleep(doorMoveSpeed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			this.doorState = DoorState.CLOSED;
 
 			/**
 			 * Debugg Code
