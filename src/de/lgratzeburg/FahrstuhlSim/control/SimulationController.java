@@ -51,7 +51,8 @@ public class SimulationController {
 
 			// updateSim() nur aufrufen, wenn deltaTime groß genug ist
 			if(deltaTime >= SIMULATION_STEP_SIZE) {
-				updateSim(deltaTime);
+				float delta = deltaTime / 1000000000f;
+				updateSim(delta);
 				past = System.nanoTime();
 			}
 		}
@@ -62,7 +63,7 @@ public class SimulationController {
 	 * @param delta - vergangene Zeit zwischen diesem und der letzten Simulationsiteration
 	 */
 	public void updateSim(float delta) {
-		// TODO Simulation schreiben
+
 	}
 
 	/**
