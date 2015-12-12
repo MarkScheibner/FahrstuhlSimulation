@@ -1,5 +1,8 @@
 package de.lgratzeburg.FahrstuhlSim.model;
 
+import java.util.ArrayList;
+
+
 public class Elevator {
 
 	// Werte für Position des Fahrstuhls
@@ -36,6 +39,19 @@ public class Elevator {
 
 	// Gwünschter Zustand der Tür
 	boolean open = false;
+
+	/**
+	 * Eine Liste aller eingegebenen Ziele
+	 */
+	private ArrayList <Integer> targetList = new ArrayList<Integer>();
+
+	/**
+	 * Erlaubt einen Zugriff auf die targetList
+	 */
+	public ArrayList<Integer> getTargetList() {
+		return targetList;
+	}
+
 
 	/**
 	 * Konstruktor eines Objektes der Klasse Elevator
