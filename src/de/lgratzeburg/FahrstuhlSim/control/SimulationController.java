@@ -1,6 +1,7 @@
 package de.lgratzeburg.FahrstuhlSim.control;
 
 import de.lgratzeburg.FahrstuhlSim.model.Elevator;
+import de.lgratzeburg.FahrstuhlSim.model.MovementState;
 
 /**
  * Der SimulationController kontrolliert die Hauptsimulation und berechnet die einzelnen Zustände unabhäng von den
@@ -14,6 +15,8 @@ public class SimulationController {
 
 	// Länge der angestrebten Zeitdifferenz zwischen Simulationsiterationen (16.67ms)
 	private static final long SIMULATION_STEP_SIZE = 1000000000 / 60;
+
+
 
 	/**
 	 * Erstellt einen SimulationController, welcher nicht von selbst startet
@@ -63,6 +66,8 @@ public class SimulationController {
 	 * @param delta - vergangene Zeit zwischen diesem und der letzten Simulationsiteration
 	 */
 	public void updateSim(float delta) {
+		int target = elevator.getTargetList().get(0);
+
 		switch(elevator.getMovementState()) {
 			case RESTING: {
 				// TODO Tür öffnen bzw. schließen und in Richtung des nächsten Ziels bewegen
@@ -73,17 +78,56 @@ public class SimulationController {
 					case OPENED: {
 
 					}
+					case OPENING: {
+
+					}
+					case CLOSING: {
+
+					}
 				}
 
+				break;
 			}
 			case UP: {
-				// TODO Elevator nach oben bewegen (beschleunigen?)
+				// der Fahrstuhl sollte sich nach unten bewegen
+				if(target < elevator.getVertPos()) {
+					elevator.setMovementState(MovementState.DOWN);
+				}
+
+				double nPos = elevator.getVertPos() + (elevator.getElevatorSpeed() * delta);
+
+				// verhindert ein überlaufen des Ziels
+				if(nPos >= target) {
+					nPos = target;
+					elevator.setMovementState(MovementState.RESTING);
+				}
+
+				elevator.setNewVertPosition(nPos);
+
+				break;
 			}
 			case DOWN: {
-				// TODO Elevator nach unten bewegen (beschleunigen?)
+				// der Fahrstuhl sollte sich nach oben bewegen
+				if(target > elevator.getVertPos()) {
+					elevator.setMovementState(MovementState.UP);
+				}
+
+				double nPos = elevator.getVertPos() - (elevator.getElevatorSpeed() * delta);
+
+				// verhindert ein überlaufen des Ziels
+				if(nPos <= target) {
+					nPos = target;
+					elevator.setMovementState(MovementState.RESTING);
+				}
+
+				elevator.setNewVertPosition(nPos);
+
+				break;
 			}
 		}
 	}
+
+
 
 	/**
 	 * Startet die Simulation, wenn diese nicht schon läuft
