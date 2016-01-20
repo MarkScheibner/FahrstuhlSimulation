@@ -36,11 +36,11 @@ public class SimulationController {
 	 */
 	public SimulationController(Elevator elevatorModel, boolean startSimulation) {
 		this.elevator = elevatorModel;
-		this.running = startSimulation;
+		this.running = false;
 
 		// Starte die Simulation, wenn gefordert
-		if(running) {
-			runSimulation();
+		if(startSimulation) {
+			startSim();
 		}
 	}
 
