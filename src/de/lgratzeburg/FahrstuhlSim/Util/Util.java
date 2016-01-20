@@ -1,7 +1,7 @@
 package de.lgratzeburg.FahrstuhlSim.util;
 
 /**
- * Util ist eine Factory-Klasse für andere Utility-Klassen, welche nützliche Zusatzfunktionen beinhalten. Über eine
+ * util ist eine Factory-Klasse für andere Utility-Klassen, welche nützliche Zusatzfunktionen beinhalten. Über eine
  * Singleton-Instanz können Instanzen dieser Utility-Klassen erstellt werden
  */
 public class Util {
@@ -12,26 +12,26 @@ public class Util {
 	private Runnable utilThread;
 
 	/**
-	 * Privater Konstruktor, um das Erstellen von Util-Instanzen außerhalb der Util-Klasse zu verhindern
+	 * Privater Konstruktor, um das Erstellen von util-Instanzen außerhalb der util-Klasse zu verhindern
 	 */
 	private Util() {
 		// Lambda-Ausdruck für einen Thread, der die run()-Funktion aufruft
 		utilThread = () -> run();
-		new Thread(utilThread, "Util-Thread").start();
+		new Thread(utilThread, "util-Thread").start();
 	}
 
 	/**
-	 * Beschreibt den Util-Thread
+	 * Beschreibt den util-Thread
 	 */
 	private void run() {
 		// TODO
-		// Der Util-Thread wurde für eine frühere Version des Timer benutzt, welcher jetzt den Timer aus java.util
+		// Der util-Thread wurde für eine frühere Version des Timer benutzt, welcher jetzt den Timer aus java.util
 		// benutzt. Der Thread ist nur übrig geblieben, falls er doch noch gebraucht wird.
 	}
 
 	/**
-	 * Gibt eine Singleton-Instanz der Util-Klasse zurück, oder erstellt diese vorher, falls nötig
-	 * @return einzige Instanz der Util-Klasse
+	 * Gibt eine Singleton-Instanz der util-Klasse zurück, oder erstellt diese vorher, falls nötig
+	 * @return einzige Instanz der util-Klasse
 	 */
 	public static Util getInstance() {
 		// erstelle eine Instanz, wenn noch keine erstellt wurde

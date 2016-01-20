@@ -1,7 +1,10 @@
 package de.lgratzeburg.FahrstuhlSim.control;
 
+import de.lgratzeburg.FahrstuhlSim.model.DoorState;
 import de.lgratzeburg.FahrstuhlSim.model.Elevator;
 import de.lgratzeburg.FahrstuhlSim.model.MovementState;
+import de.lgratzeburg.FahrstuhlSim.util.Timer;
+import de.lgratzeburg.FahrstuhlSim.util.Util;
 
 /**
  * Der SimulationController kontrolliert die Hauptsimulation und berechnet die einzelnen Zustände unabhäng von den
@@ -61,6 +64,8 @@ public class SimulationController {
 		}
 	}
 
+	Timer doorTimer;
+
 	/**
 	 * Berechnet einen einzelne Simulationsiteration
 	 * @param delta - vergangene Zeit zwischen diesem und der letzten Simulationsiteration
@@ -79,7 +84,13 @@ public class SimulationController {
 
 					}
 					case OPENING: {
-
+						if(doorTimer == null) {
+							doorTimer = Util.getInstance().makeTimer(5);
+						} else if(doorTimer.hasFinished()) {
+							elevator.setDoorState(DoorState.OPENED);
+							doorTimer = null;
+						}
+						break;
 					}
 					case CLOSING: {
 
