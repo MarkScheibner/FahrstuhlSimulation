@@ -76,27 +76,15 @@ public class SimulationController {
 		switch(elevator.getMovementState()) {
 			case RESTING: {
 				// TODO Tür öffnen bzw. schließen und in Richtung des nächsten Ziels bewegen
-				switch(elevator.getDoorState()) {
-					case CLOSED: {
 
-					}
-					case OPENED: {
-
-					}
-					case OPENING: {
-						if(doorTimer == null) {
-							doorTimer = Util.getInstance().makeTimer(5);
-						} else if(doorTimer.hasFinished()) {
-							elevator.setDoorState(DoorState.OPENED);
-							doorTimer = null;
-						}
-						break;
-					}
-					case CLOSING: {
-
+				elevator.setDoorState(handleDoorState(elevator.getDoorState()));
+				if(elevator.getDoorState() == DoorState.CLOSED) {
+					if(target > elevator.getVertPos()) {
+						elevator.setMovementState(MovementState.UP);
+					} else {
+						elevator.setMovementState(MovementState.DOWN);
 					}
 				}
-
 				break;
 			}
 			case UP: {
@@ -138,6 +126,38 @@ public class SimulationController {
 		}
 	}
 
+
+	private DoorState handleDoorState(DoorState doorState) {
+		switch(elevator.getDoorState()) {
+			case CLOSED: {
+
+				return doorState;
+			}
+			case OPENED: {
+
+				return doorState;
+			}
+			case OPENING: {
+				if(doorTimer == null) {
+					// OPENING-state wurde erst im letzten Iterations-Schritt betreten
+					doorTimer = Util.getInstance().makeTimer(5);
+				} else if(doorTimer.hasFinished()) {
+					doorTimer = null;
+					return DoorState.OPENED;
+				}
+
+				return doorState;
+			}
+			case CLOSING: {
+
+				return doorState;
+			}
+			default: {
+				System.out.println("Hier lief etwas schief... " + doorState);
+				return doorState;
+			}
+		}
+	}
 
 
 	/**
