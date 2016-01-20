@@ -43,12 +43,12 @@ public class Elevator {
 	/**
 	 * Eine Liste aller eingegebenen Ziele
 	 */
-	private ArrayList <Integer> targetList = new ArrayList<Integer>();
+	private List <Integer> targetList = new ArrayList<Integer>();
 
 	/**
 	 * Erlaubt einen Zugriff auf die targetList
 	 */
-	public ArrayList<Integer> getTargetList() {
+	public List<Integer> getTargetList() {
 		return targetList;
 	}
 
