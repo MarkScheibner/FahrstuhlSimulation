@@ -2,7 +2,9 @@ package de.lgratzeburg.FahrstuhlSim.control;
 
 import de.lgratzeburg.FahrstuhlSim.model.DoorState;
 import de.lgratzeburg.FahrstuhlSim.model.Elevator;
+import de.lgratzeburg.FahrstuhlSim.model.Model;
 import de.lgratzeburg.FahrstuhlSim.model.MovementState;
+import de.lgratzeburg.FahrstuhlSim.util.Constants;
 import de.lgratzeburg.FahrstuhlSim.util.Timer;
 import de.lgratzeburg.FahrstuhlSim.util.Util;
 
@@ -13,7 +15,6 @@ import de.lgratzeburg.FahrstuhlSim.util.Util;
  */
 public class SimulationController {
 
-	private Elevator elevator;
 	private boolean running;
 
 	// Länge der angestrebten Zeitdifferenz zwischen Simulationsiterationen (16.67ms)
@@ -25,8 +26,8 @@ public class SimulationController {
 	 * Erstellt einen SimulationController, welcher nicht von selbst startet
 	 * @param elevatorModel - Referenz auf die zu benutzende {@link Elevator}-Instanz
 	 */
-	public SimulationController(Elevator elevatorModel) {
-		this(elevatorModel, false);
+	public SimulationController() {
+		this(false);
 	}
 
 	/**
@@ -34,8 +35,7 @@ public class SimulationController {
 	 * @param elevatorModel - Referenz auf die zu benutzende {@link Elevator}-Instanz
 	 * @param startSimulation - gibt an, ob die Simulation sofort gestartet werden soll
 	 */
-	public SimulationController(Elevator elevatorModel, boolean startSimulation) {
-		this.elevator = elevatorModel;
+	public SimulationController(boolean startSimulation) {
 		this.running = false;
 
 		// Starte die Simulation, wenn gefordert
@@ -71,70 +71,82 @@ public class SimulationController {
 	 * @param delta - vergangene Zeit zwischen diesem und der letzten Simulationsiteration
 	 */
 	public void updateSim(float delta) {
-		int target = elevator.getTargetList().get(0);
+		for(int i = 0; i < Constants.ELEVATOR_COUNT; i++) {
+			Elevator elevator = Model.instance().getElevatorList(i);
+			int target = elevator.getTargetList().get(0);
 
-		switch(elevator.getMovementState()) {
-			case RESTING: {
-				// TODO Tür öffnen bzw. schließen und in Richtung des nächsten Ziels bewegen
-
-				elevator.setDoorState(handleDoorState(elevator.getDoorState()));
-				if(elevator.getDoorState() == DoorState.CLOSED) {
-					if(target > elevator.getVertPos()) {
-						elevator.setMovementState(MovementState.UP);
-					} else {
+			switch(elevator.getMovementState()) {
+				case RESTING: {
+					elevator.setDoorState(handleDoorState(elevator));
+					if(elevator.getDoorState() == DoorState.CLOSED) {
+						if(target > elevator.getVertPos()) {
+							elevator.setMovementState(MovementState.UP);
+						} else {
+							elevator.setMovementState(MovementState.DOWN);
+						}
+					}
+					break;
+				}
+				case UP: {
+					// der Fahrstuhl sollte sich nach unten bewegen
+					if(target < elevator.getVertPos()) {
 						elevator.setMovementState(MovementState.DOWN);
 					}
+
+					double nPos = elevator.getVertPos() + (elevator.getElevatorSpeed() * delta);
+
+					// verhindert ein überlaufen des Ziels
+					if(nPos >= target) {
+						nPos = target;
+						elevator.setMovementState(MovementState.RESTING);
+					}
+
+					elevator.setNewVertPosition(nPos);
+
+					break;
 				}
-				break;
-			}
-			case UP: {
-				// der Fahrstuhl sollte sich nach unten bewegen
-				if(target < elevator.getVertPos()) {
-					elevator.setMovementState(MovementState.DOWN);
+				case DOWN: {
+					// der Fahrstuhl sollte sich nach oben bewegen
+					if(target > elevator.getVertPos()) {
+						elevator.setMovementState(MovementState.UP);
+					}
+
+					double nPos = elevator.getVertPos() - (elevator.getElevatorSpeed() * delta);
+
+					// verhindert ein überlaufen des Ziels
+					if(nPos <= target) {
+						nPos = target;
+						elevator.setMovementState(MovementState.RESTING);
+					}
+
+					elevator.setNewVertPosition(nPos);
+
+					break;
 				}
-
-				double nPos = elevator.getVertPos() + (elevator.getElevatorSpeed() * delta);
-
-				// verhindert ein überlaufen des Ziels
-				if(nPos >= target) {
-					nPos = target;
-					elevator.setMovementState(MovementState.RESTING);
-				}
-
-				elevator.setNewVertPosition(nPos);
-
-				break;
-			}
-			case DOWN: {
-				// der Fahrstuhl sollte sich nach oben bewegen
-				if(target > elevator.getVertPos()) {
-					elevator.setMovementState(MovementState.UP);
-				}
-
-				double nPos = elevator.getVertPos() - (elevator.getElevatorSpeed() * delta);
-
-				// verhindert ein überlaufen des Ziels
-				if(nPos <= target) {
-					nPos = target;
-					elevator.setMovementState(MovementState.RESTING);
-				}
-
-				elevator.setNewVertPosition(nPos);
-
-				break;
 			}
 		}
 	}
 
+	/**
+	 * Berechnet den neuen DoorState
+	 * @param elevator - Referenz des {@link Elevator}s, dessen DoorState bestimmt werden soll
+	 * @return den neuen DoorState
+	 */
+	private DoorState handleDoorState(Elevator elevator) {
+		DoorState doorState = elevator.getDoorState();
 
-	private DoorState handleDoorState(DoorState doorState) {
-		switch(elevator.getDoorState()) {
+		switch(doorState) {
 			case CLOSED: {
-
-				return doorState;
+				return DoorState.OPENING;
 			}
 			case OPENED: {
-
+				if(doorTimer == null) {
+					// OPENING-state wurde erst im letzten Iterations-Schritt betreten
+					doorTimer = Util.getInstance().makeTimer(5);
+				} else if(doorTimer.hasFinished()) {
+					doorTimer = null;
+					return DoorState.CLOSING;
+				}
 				return doorState;
 			}
 			case OPENING: {
@@ -149,6 +161,13 @@ public class SimulationController {
 				return doorState;
 			}
 			case CLOSING: {
+				if(doorTimer == null) {
+					// OPENING-state wurde erst im letzten Iterations-Schritt betreten
+					doorTimer = Util.getInstance().makeTimer(5);
+				} else if(doorTimer.hasFinished()) {
+					doorTimer = null;
+					return DoorState.CLOSED;
+				}
 
 				return doorState;
 			}
