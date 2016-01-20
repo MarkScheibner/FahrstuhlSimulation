@@ -157,6 +157,13 @@ public class Elevator {
 	}
 
 
+	/**
+	 * Fügt eine neue Target hinzu
+	 * @param target
+     	*/
+	public void addTargetlevel(int target){
+		targetList.add(target);
+	}
 
 /**
  * changeVertPos Funktion wurde rausgenommen und an die Control übergeben
