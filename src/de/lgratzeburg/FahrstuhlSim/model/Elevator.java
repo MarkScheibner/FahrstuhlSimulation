@@ -1,6 +1,7 @@
 package de.lgratzeburg.FahrstuhlSim.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Elevator {
@@ -144,7 +145,7 @@ public class Elevator {
 	 * @param verticalPos - Wert für momentane vertikale Position des Fahrstuhls, in Relation zu den Stockwerken
 	 */
 	public void setNewVertPosition (double verticalPos) {
-		this.verticalPos = verticalPos + 0.1;
+		this.verticalPos = verticalPos;
 	}
 
 

@@ -24,7 +24,6 @@ public class SimulationController {
 
 	/**
 	 * Erstellt einen SimulationController, welcher nicht von selbst startet
-	 * @param elevatorModel - Referenz auf die zu benutzende {@link Elevator}-Instanz
 	 */
 	public SimulationController() {
 		this(false);
@@ -32,7 +31,6 @@ public class SimulationController {
 
 	/**
 	 * Erstellt einen SimulationController, welcher bei bedarf automatisch gestartet wird
-	 * @param elevatorModel - Referenz auf die zu benutzende {@link Elevator}-Instanz
 	 * @param startSimulation - gibt an, ob die Simulation sofort gestartet werden soll
 	 */
 	public SimulationController(boolean startSimulation) {
@@ -73,7 +71,15 @@ public class SimulationController {
 	public void updateSim(float delta) {
 		for(int i = 0; i < Constants.ELEVATOR_COUNT; i++) {
 			Elevator elevator = Model.instance().getElevatorList(i);
-			int target = elevator.getTargetList().get(0);
+			int target;
+
+			if(elevator.getTargetList().size() > 0) {
+				target = elevator.getTargetList().get(0);
+			} else {
+				target = 0;
+			}
+
+			System.out.println("Elevator " + i + " is at position " + elevator.getVertPos() + " with target " + target);
 
 			switch(elevator.getMovementState()) {
 				case RESTING: {

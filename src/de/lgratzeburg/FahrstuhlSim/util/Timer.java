@@ -14,7 +14,6 @@ public class Timer {
 	private final TimerTask task = new TimerTask() {
 		public void run() {
 			isFinished = true;
-			System.out.println("Finished");
 		}
 	};
 
