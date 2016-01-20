@@ -10,7 +10,6 @@ public class ControlUnit implements Observable, Observer {
 
 	// Singleton-Instanz
 	private static ControlUnit instance;
-	private static Elevator elevator;
 
 	private ObserverController oc;
 	private SimulationController sc;
@@ -24,31 +23,17 @@ public class ControlUnit implements Observable, Observer {
 	 */
 	private ControlUnit() {
 		oc = new ObserverController();
-		sc = new SimulationController(elevator, true);
+		sc = new SimulationController(true);
 
 		registerObserver(oc);
 	}
 
 	/**
-	 * Initialisiert die ControlUnit-Klasse mit einer {@link Elevator}-Instanz, welche der {@link SimulationController}-
-	 * Instanz bei der Erstellung übergeben wird
-	 * @param e in der Simulation zu benutzende {@link Elevator}-Instanz
-	 */
-	public static void init(Elevator e) {
-		elevator = e;
-	}
-
-	/**
 	 * Gibt eine Singleton-Instanz der ControlUnit-Klasse zurück, oder erstellt diese vorher, falls nötig
 	 * @return einzige Instanz der ControlUnit-Klasse
-	 * @throws NullPointerException wenn die Klasse vorher nicht über {@link #init(Elevator)} mit einer {@link Elevator}-
-	 * Instanz initialisiert wurde
 	 */
-	public static ControlUnit instance() throws NullPointerException {
+	public static ControlUnit instance() {
 		if(instance == null) {
-			if(elevator == null) {
-				throw new NullPointerException("ControlUnit muss erst mit einer Elevator-Instanz initialisiert werden");
-			}
 			instance = new ControlUnit();
 		}
 
